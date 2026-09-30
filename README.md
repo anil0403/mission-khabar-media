@@ -13,7 +13,7 @@ News portal for **Mission Khabar Pvt. Ltd.** (मिसन खबर मिड�
 cp .env.example .env      # then fill it in (see comments in the file)
 npm install
 npm run migrate           # create/update database tables
-npm run seed              # starter categories + About/Advertise/Privacy/Contact pages (safe to re-run)
+npm run seed              # admin from SEED_ADMIN_* in .env + starter categories + About/Advertise/Privacy/Contact pages (safe to re-run)
 npm run dev               # http://localhost:3000 — admin at /admin (first account becomes Admin)
 ```
 
@@ -22,7 +22,7 @@ npm run dev               # http://localhost:3000 — admin at /admin (first acc
 | `npm run dev` / `build` / `start` | Next.js |
 | `npm run migrate` | Apply database migrations (uses the direct Neon connection) |
 | `npm run migrate:create -- <name>` | After changing anything in `collections/`, generate a migration, then commit it |
-| `npm run seed` | Starter categories and pages |
+| `npm run seed` | Admin account (from `SEED_ADMIN_*` in `.env`), starter categories and pages |
 | `npm run check` | Self-checks for slugs, @mentions, Cloudinary URLs and Nepali dates |
 | `npm run generate:types` | Refresh `payload-types.ts` after changing collections |
 

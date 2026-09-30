@@ -1,8 +1,20 @@
-// npm run seed — creates starter categories and pages if they don't exist yet. Safe to re-run.
+// npm run seed — creates the admin (from .env), starter categories and pages if they don't exist yet. Safe to re-run.
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
 const payload = await getPayload({ config })
+
+// Admin account from .env (SEED_ADMIN_*). Skipped if unset or the email already exists.
+const { SEED_ADMIN_NAME, SEED_ADMIN_EMAIL, SEED_ADMIN_PASSWORD } = process.env
+if (SEED_ADMIN_EMAIL && SEED_ADMIN_PASSWORD) {
+  const email = SEED_ADMIN_EMAIL.trim().toLowerCase()
+  const exists = await payload.count({ collection: 'users', where: { email: { equals: email } } })
+  if (exists.totalDocs) payload.logger.info(`Admin ${email} already exists — skipped.`)
+  else {
+    await payload.create({ collection: 'users', data: { name: SEED_ADMIN_NAME || 'Admin', email, password: SEED_ADMIN_PASSWORD, role: 'admin' } })
+    payload.logger.info(`Admin created: ${email}`)
+  }
+}
 
 const categories = [
   ['समाचार / News', 'news'],
@@ -41,5 +53,5 @@ for (const [title, slug, content] of pages) {
   if (!exists.totalDocs) await payload.create({ collection: 'pages', data: { title, slug, body: content, _status: 'published' } })
 }
 
-payload.logger.info('Seed done: categories and pages are ready. Create your admin account at /admin.')
+payload.logger.info('Seed done. Log in at /admin.')
 process.exit(0)
